@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:spotify/screen/player_screen.dart';
 class PlayListLibraryScreen extends StatefulWidget {
   const PlayListLibraryScreen({super.key});
 
@@ -15,24 +14,21 @@ class _PlayListScreenState extends State<PlayListLibraryScreen> {
       appBar: AppBar(
         actions: <Widget>[
         IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.add,
             color: Colors.white,
           ),
           onPressed: () {
-            // do something
+
           },
         )
   ],
          centerTitle: true,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+            children: const [
               
-              // const SizedBox(
-              //   width: 45,
-              // ),
-              const Text(
+               Text(
                 'PlayList',
                 style: TextStyle(color: Colors.white),
               ),

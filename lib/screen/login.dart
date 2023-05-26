@@ -1,12 +1,6 @@
-
-
 import 'package:flutter/material.dart';
-import 'package:spotify/home_screen.dart';
 import 'package:spotify/screen/home_spotify.dart';
-
 import 'signup.dart';
-import 'package:page_transition/page_transition.dart';
-
 class Login extends StatefulWidget {
   const Login({super.key});
 
@@ -59,7 +53,7 @@ class _LoginState extends State<Login> {
                   ),
                   Container(
                     padding: EdgeInsets.fromLTRB(16.0, 175.0, 17.0, 16.0),
-                    child: Text('Wellcome Spotify',
+                    child:  Text('Wellcome Spotify',
                         style: const TextStyle(
                             color: Colors.white,
                             fontSize: 30.0,
