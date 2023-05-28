@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
           splash: const SplashScreen(),
           duration: 2000,
           backgroundColor: color,
-          nextScreen: const Login()),
+          nextScreen: Login()),
     );
   }
 }

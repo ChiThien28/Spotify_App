@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:spotify/screen/home_spotify.dart';
-
 import 'signup.dart';
 
 class Login extends StatefulWidget {
