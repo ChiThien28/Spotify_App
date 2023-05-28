@@ -39,6 +39,7 @@ dependencies:
   mongo_dart: ^0.9.1
   page_transition: ^2.0.9
   get: ^4.6.5
+  audioplayers: ^4.0.1
 
 dev_dependencies:
   flutter_test:

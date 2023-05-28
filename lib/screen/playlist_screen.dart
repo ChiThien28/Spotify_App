@@ -35,8 +35,8 @@ class _PlayListScreenState extends State<PlayListScreen> {
                       return ListView.separated(
                         padding: const EdgeInsets.all(8),
                         itemBuilder: (context, idx) {
-                          return displayList(
-                              Song.fromJson(snapshot.data[idx]), idx);
+                          return displayList(Song.fromJson(snapshot.data[idx]),
+                              idx, snapshot.data);
                         },
                         separatorBuilder: (context, idx) => const Divider(),
                         itemCount: snapshot.data.length,
@@ -50,7 +50,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
                 })));
   }
 
-  Widget displayList(Song song, int idx) {
+  Widget displayList(Song song, int idx, List<Map<String, Object?>> snapshot) {
     return ListTile(
       leading: CircleAvatar(
         child: Text(idx.toString()),
@@ -62,7 +62,8 @@ class _PlayListScreenState extends State<PlayListScreen> {
           context,
           MaterialPageRoute(
               builder: (context) => PlayerScreen(
-                    song: song,
+                    song: snapshot,
+                    index: idx,
                   )),
         );
       },
