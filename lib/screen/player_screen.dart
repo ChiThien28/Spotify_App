@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:spotify/model/song.dart';
@@ -20,6 +22,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
   Duration posiotion = Duration.zero;
   bool _isPlaying = false;
   bool _isAutoChangeSong = false;
+  bool _isRandomChangeSong = false;
   var iconAction = const Icon(
     Icons.play_arrow,
     size: 40.0,
@@ -29,6 +32,42 @@ class _PlayerScreenState extends State<PlayerScreen> {
     setState(() {
       // Cập nhật các biến trạng thái liên quan đến giao diện người dùng
     });
+  }
+
+  void autoChange() async {
+    setState(() {
+      index++;
+      songItem = Song.fromJson(widget.song[index]);
+      iconAction = const Icon(
+        Icons.pause,
+        size: 40.0,
+      );
+    });
+    if (!_isPlaying) {
+      late Source audioUrl;
+      audioUrl = UrlSource(songItem.source);
+      await audioPlayer.play(audioUrl);
+    }
+    _updatePlayerScreen();
+  }
+
+  void randomChange() async {
+    var random = Random();
+    var number = random.nextInt(widget.song.length);
+    print(number);
+    setState(() {
+      songItem = Song.fromJson(widget.song[number]);
+      iconAction = const Icon(
+        Icons.pause,
+        size: 40.0,
+      );
+    });
+    if (!_isPlaying) {
+      late Source audioUrl;
+      audioUrl = UrlSource(songItem.source);
+      await audioPlayer.play(audioUrl);
+    }
+    _updatePlayerScreen();
   }
 
   @override
@@ -48,20 +87,13 @@ class _PlayerScreenState extends State<PlayerScreen> {
           );
           _updatePlayerScreen();
           if (_isAutoChangeSong && index < widget.song.length) {
-            setState(() {
-              index++;
-              songItem = Song.fromJson(widget.song[index]);
-              iconAction = const Icon(
-                Icons.pause,
-                size: 40.0,
-              );
-              if (!_isPlaying) {
-                late Source audioUrl;
-                audioUrl = UrlSource(songItem.source);
-                audioPlayer.play(audioUrl);
-              }
-            });
-            _updatePlayerScreen();
+            autoChange();
+          } else if (_isRandomChangeSong) {
+            randomChange();
+          } else {
+            duration = Duration.zero;
+            posiotion = Duration.zero;
+            print("Song is end!");
           }
         }
       });
@@ -255,6 +287,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                         IconButton(
                           onPressed: () async {
                             setState(() {
+                              _isRandomChangeSong = false;
                               _isAutoChangeSong = !_isAutoChangeSong;
                             });
                             print(_isAutoChangeSong);
@@ -322,35 +355,62 @@ class _PlayerScreenState extends State<PlayerScreen> {
                             child: iconAction),
                         IconButton(
                           onPressed: () async {
-                            if (index < widget.song.length) {
-                              setState(() {
-                                index++;
-                                songItem = Song.fromJson(widget.song[index]);
-                                iconAction = const Icon(
-                                  Icons.pause,
-                                  size: 40.0,
-                                );
-                              });
-                              if (_isPlaying) {
-                                await audioPlayer.pause();
-                                late Source audioUrl;
-                                audioUrl = UrlSource(songItem.source);
-                                await audioPlayer.play(audioUrl);
+                            if (index <= widget.song.length) {
+                              print(index);
+                              if (index == widget.song.length - 1) {
+                                setState(() {
+                                  index = 0;
+                                  songItem = Song.fromJson(widget.song[index]);
+                                  iconAction = const Icon(
+                                    Icons.pause,
+                                    size: 40.0,
+                                  );
+                                });
+                                if (_isPlaying) {
+                                  await audioPlayer.pause();
+                                  late Source audioUrl;
+                                  audioUrl = UrlSource(songItem.source);
+                                  await audioPlayer.play(audioUrl);
+                                } else {
+                                  late Source audioUrl;
+                                  audioUrl = UrlSource(songItem.source);
+                                  await audioPlayer.play(audioUrl);
+                                }
                               } else {
-                                late Source audioUrl;
-                                audioUrl = UrlSource(songItem.source);
-                                await audioPlayer.play(audioUrl);
+                                setState(() {
+                                  index++;
+                                  songItem = Song.fromJson(widget.song[index]);
+                                  iconAction = const Icon(
+                                    Icons.pause,
+                                    size: 40.0,
+                                  );
+                                });
+                                if (_isPlaying) {
+                                  await audioPlayer.pause();
+                                  late Source audioUrl;
+                                  audioUrl = UrlSource(songItem.source);
+                                  await audioPlayer.play(audioUrl);
+                                } else {
+                                  late Source audioUrl;
+                                  audioUrl = UrlSource(songItem.source);
+                                  await audioPlayer.play(audioUrl);
+                                }
                               }
                             }
-
                             _updatePlayerScreen();
                           },
                           icon: const Icon(Icons.skip_next_sharp,
                               size: 32, color: Color(0xFFFFFFFF)),
                         ),
                         IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.skip_next_sharp,
+                          onPressed: () {
+                            setState(() {
+                              _isAutoChangeSong = false;
+                              _isRandomChangeSong = !_isRandomChangeSong;
+                            });
+                            print(_isAutoChangeSong);
+                          },
+                          icon: const Icon(Icons.shuffle,
                               size: 32, color: Color(0xFFFFFFFF)),
                         ),
                       ],
