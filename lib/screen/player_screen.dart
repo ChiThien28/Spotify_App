@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:spotify/model/song.dart';
 import 'package:spotify/screen/playlist_screen.dart';
 
+// ignore: must_be_immutable
 class PlayerScreen extends StatefulWidget {
   int index;
-  List<Map<String, Object?>> song;
+  List<Song> song;
   PlayerScreen({super.key, required this.index, required this.song});
 
   @override
@@ -27,6 +28,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
     Icons.play_arrow,
     size: 40.0,
   );
+  late Color _iconRandomChangeColor;
+  late Color _iconAutoChangeColor;
 
   void _updatePlayerScreen() {
     setState(() {
@@ -37,37 +40,41 @@ class _PlayerScreenState extends State<PlayerScreen> {
   void autoChange() async {
     setState(() {
       index++;
-      songItem = Song.fromJson(widget.song[index]);
+      songItem = widget.song[index];
       iconAction = const Icon(
         Icons.pause,
         size: 40.0,
       );
+      _isPlaying = true; // Gán giá trị cho _isPlaying
     });
-    if (!_isPlaying) {
+    if (_isPlaying) {
       late Source audioUrl;
       audioUrl = UrlSource(songItem.source);
+      _updatePlayerScreen();
       await audioPlayer.play(audioUrl);
     }
-    _updatePlayerScreen();
   }
 
   void randomChange() async {
     var random = Random();
     var number = random.nextInt(widget.song.length);
     print(number);
+
     setState(() {
-      songItem = Song.fromJson(widget.song[number]);
+      songItem = widget.song[number];
       iconAction = const Icon(
         Icons.pause,
         size: 40.0,
       );
+      _isPlaying = true; // Gán giá trị cho _isPlaying
     });
-    if (!_isPlaying) {
-      late Source audioUrl;
-      audioUrl = UrlSource(songItem.source);
+
+    if (_isPlaying) {
+      Source audioUrl =
+          UrlSource(songItem.source); // Khởi tạo giá trị cho audioUrl
+      _updatePlayerScreen();
       await audioPlayer.play(audioUrl);
     }
-    _updatePlayerScreen();
   }
 
   @override
@@ -75,7 +82,12 @@ class _PlayerScreenState extends State<PlayerScreen> {
     // TODO: implement initState
     super.initState();
     index = widget.index;
-    songItem = Song.fromJson(widget.song[index]);
+    songItem = widget.song[index];
+    _iconRandomChangeColor =
+        _isRandomChangeSong ? Color(0xFFFFFFFF) : Color(0xFF000000);
+
+    _iconAutoChangeColor =
+        _isAutoChangeSong ? Color(0xFFFFFFFF) : Color(0xFF000000);
 
     audioPlayer.onPlayerStateChanged.listen((state) {
       setState(() {
@@ -85,6 +97,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
             Icons.play_arrow,
             size: 40.0,
           );
+          duration = Duration.zero;
+          posiotion = Duration.zero;
           _updatePlayerScreen();
           if (_isAutoChangeSong && index < widget.song.length) {
             autoChange();
@@ -98,27 +112,6 @@ class _PlayerScreenState extends State<PlayerScreen> {
         }
       });
     });
-
-    // audioPlayer.onPlayerStateChanged.listen((state) {
-    //   setState(() {
-    //     _isPlaying = state == PlayerState.playing;
-    //     if (state == PlayerState.completed) {
-    //       print("Music has completed!");
-    //       iconAction = const Icon(
-    //         Icons.play_arrow,
-    //         size: 40.0,
-    //       );
-    //       _updatePlayerScreen();
-    //       if (_isAutoChangeSong) {
-    //         if (index < widget.song.length) {
-    //           index++;
-    //           songItem = Song.fromJson(widget.song[index]);
-    //           _updatePlayerScreen();
-    //         }
-    //       }
-    //     }
-    //   });
-    // });
 
     audioPlayer.onDurationChanged.listen((newDuration) {
       setState(() {
@@ -247,10 +240,13 @@ class _PlayerScreenState extends State<PlayerScreen> {
                             child: Slider(
                           min: 0,
                           max: duration.inSeconds.toDouble(),
-                          value: posiotion.inSeconds.toDouble(),
+                          value: posiotion.inSeconds
+                              .toDouble(), // Sử dụng position thay vì value
                           onChanged: (value) async {
-                            final posiotion = Duration(seconds: value.toInt());
-                            await audioPlayer.seek(posiotion);
+                            final position = Duration(
+                                seconds: value
+                                    .toInt()); // Sử dụng position thay vì value
+                            await audioPlayer.seek(position);
                             await audioPlayer.resume();
                           },
                           activeColor: const Color(0xFFA9A9A9),
@@ -287,22 +283,29 @@ class _PlayerScreenState extends State<PlayerScreen> {
                         IconButton(
                           onPressed: () async {
                             setState(() {
-                              _isRandomChangeSong = false;
+                              if (_isRandomChangeSong) {
+                                _isRandomChangeSong = false;
+                                _iconRandomChangeColor = Color(0xFF000000);
+                              }
                               _isAutoChangeSong = !_isAutoChangeSong;
+                              _iconAutoChangeColor = _isAutoChangeSong
+                                  ? Color(0xFFFFFFFF)
+                                  : Color(0xFF000000);
                             });
                             print(_isAutoChangeSong);
                           },
-                          icon: const Icon(
-                              IconData(0xe0c1, fontFamily: 'MaterialIcons'),
+                          icon: Icon(
+                              const IconData(0xe0c1,
+                                  fontFamily: 'MaterialIcons'),
                               size: 32,
-                              color: Color(0xFFFFFFFF)),
+                              color: _iconAutoChangeColor),
                         ),
                         IconButton(
                           onPressed: () async {
                             if (index > 0) {
                               setState(() {
                                 index--;
-                                songItem = Song.fromJson(widget.song[index]);
+                                songItem = widget.song[index];
                                 iconAction = const Icon(
                                   Icons.pause,
                                   size: 40.0,
@@ -360,7 +363,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                               if (index == widget.song.length - 1) {
                                 setState(() {
                                   index = 0;
-                                  songItem = Song.fromJson(widget.song[index]);
+                                  songItem = widget.song[index];
                                   iconAction = const Icon(
                                     Icons.pause,
                                     size: 40.0,
@@ -374,12 +377,13 @@ class _PlayerScreenState extends State<PlayerScreen> {
                                 } else {
                                   late Source audioUrl;
                                   audioUrl = UrlSource(songItem.source);
+                                  _updatePlayerScreen();
                                   await audioPlayer.play(audioUrl);
                                 }
                               } else {
                                 setState(() {
                                   index++;
-                                  songItem = Song.fromJson(widget.song[index]);
+                                  songItem = widget.song[index];
                                   iconAction = const Icon(
                                     Icons.pause,
                                     size: 40.0,
@@ -393,26 +397,34 @@ class _PlayerScreenState extends State<PlayerScreen> {
                                 } else {
                                   late Source audioUrl;
                                   audioUrl = UrlSource(songItem.source);
+                                  _updatePlayerScreen();
                                   await audioPlayer.play(audioUrl);
                                 }
                               }
                             }
-                            _updatePlayerScreen();
                           },
                           icon: const Icon(Icons.skip_next_sharp,
                               size: 32, color: Color(0xFFFFFFFF)),
                         ),
                         IconButton(
-                          onPressed: () {
-                            setState(() {
-                              _isAutoChangeSong = false;
-                              _isRandomChangeSong = !_isRandomChangeSong;
-                            });
-                            print(_isAutoChangeSong);
-                          },
-                          icon: const Icon(Icons.shuffle,
-                              size: 32, color: Color(0xFFFFFFFF)),
-                        ),
+                            onPressed: () {
+                              setState(() {
+                                if (_isAutoChangeSong) {
+                                  _isAutoChangeSong = false;
+                                  _iconAutoChangeColor = Color(0xFF000000);
+                                }
+                                _isRandomChangeSong = !_isRandomChangeSong;
+                                _iconRandomChangeColor = _isRandomChangeSong
+                                    ? Color(0xFFFFFFFF)
+                                    : Color(0xFF000000);
+                              });
+                              print(_isAutoChangeSong);
+                            },
+                            icon: Icon(
+                              Icons.shuffle,
+                              size: 32,
+                              color: _iconRandomChangeColor,
+                            ))
                       ],
                     ),
                   )

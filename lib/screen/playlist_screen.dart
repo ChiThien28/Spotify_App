@@ -12,45 +12,55 @@ class PlayListScreen extends StatefulWidget {
 }
 
 class _PlayListScreenState extends State<PlayListScreen> {
-  List<dynamic> posts = [];
+  late Future<List<Song>> albumList;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeData();
+  }
+
+  Future<void> _initializeData() async {
+    albumList = MongoDatabase.getData();
+  }
+
   @override
   Widget build(BuildContext context) {
-    // fetchPost();
     return Scaffold(
         appBar: AppBar(
           title: const Text("Demo Text Api Flutter"),
         ),
-        body: SafeArea(
-            child: FutureBuilder(
-                future: MongoDatabase.getData(),
-                builder: (context, AsyncSnapshot snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else {
-                    if (snapshot.hasData) {
-                      var totalData = snapshot.data.length;
-                      print("Total Data" + totalData.toString());
-                      return ListView.separated(
-                        padding: const EdgeInsets.all(8),
-                        itemBuilder: (context, idx) {
-                          return displayList(Song.fromJson(snapshot.data[idx]),
-                              idx, snapshot.data);
-                        },
-                        separatorBuilder: (context, idx) => const Divider(),
-                        itemCount: snapshot.data.length,
-                      );
-                    } else {
-                      return const Center(
-                        child: Text("No data Available."),
-                      );
-                    }
-                  }
-                })));
+        body: FutureBuilder(
+            future: albumList,
+            builder: (context, AsyncSnapshot snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else {
+                if (snapshot.hasData) {
+                  var totalData = snapshot.data.length;
+                  // ignore: avoid_print
+                  print("Total Data: $totalData");
+                  return ListView.separated(
+                    padding: const EdgeInsets.all(8),
+                    itemBuilder: (context, idx) {
+                      return displayList(
+                          snapshot.data[idx], idx, snapshot.data);
+                    },
+                    separatorBuilder: (context, idx) => const Divider(),
+                    itemCount: snapshot.data.length,
+                  );
+                } else {
+                  return const Center(
+                    child: Text("No data Available."),
+                  );
+                }
+              }
+            }));
   }
 
-  Widget displayList(Song song, int idx, List<Map<String, Object?>> snapshot) {
+  Widget displayList(Song song, int idx, List<Song> snapshot) {
     return ListTile(
       leading: CircleAvatar(
         child: Text(idx.toString()),
