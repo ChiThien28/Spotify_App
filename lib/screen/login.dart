@@ -1,181 +1,283 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:spotify/screen/home_spotify.dart';
-import 'signup.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
-
-  @override
-  State<Login> createState() => _LoginState();
+void main() {
+  runApp(MyApp());
 }
-// void _showScreen(var context, var screen) {
-//     Navigator.pop(context);
-//     Navigator.pushReplacement(
-//       context,
-//       PageTransition(
-//         child: screen,
-//         type: PageTransitionType.rightToLeftWithFade,
-//       ),
-//     );
-//   }
 
-class _LoginState extends State<Login> {
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.black,
-        appBar: AppBar(
-          backgroundColor: Colors.black,
-          centerTitle: true,
-          title: Row(
+    return MaterialApp(
+      title: 'Flutter Spotify',
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+      ),
+      home: LoginPage(),
+      routes: {
+        '/home': (context) => HomePage(),
+        '/register': (context) => RegisterPage(),
+      },
+    );
+  }
+}
+
+class LoginPage extends StatelessWidget {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  void login(BuildContext context) async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+
+      User? user = userCredential.user;
+      if (user != null) {
+       Navigator.push(context, MaterialPageRoute(
+                              builder: (build) => Spotify()));
+      }
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Invalid email or password.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+     return Scaffold(
+      body: Center(
+        child: Container(
+          color: Colors.black,
+          padding: EdgeInsets.all(16.0),
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Text(
+                'Welcome to',
+                style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(height: 8.0),
               Image.asset(
                 'assets/images/logo.png',
-                scale: 12,
+                height: 80.0,
+                width: 80.0,
               ),
+              SizedBox(height: 32.0),
+              Text(
+                'Login to continue',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(height: 16.0),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: TextField(
+                  controller: emailController,
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    prefixIcon: Icon(Icons.email, color: Colors.white),
+                    labelStyle: TextStyle(color: Colors.white),
+                    border: InputBorder.none,
+                  ),
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              SizedBox(height: 8.0),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: TextField(
+                  controller: passwordController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    prefixIcon: Icon(Icons.lock, color: Colors.white),
+                    labelStyle: TextStyle(color: Colors.white),
+                    border: InputBorder.none,
+                  ),
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              SizedBox(height: 16.0),
+              ElevatedButton(
+              
+              onPressed: () => login(context),
+              style: ElevatedButton.styleFrom(
+                  primary: Colors.green,
+                ),
+              child: Text('Login'),
+            ),
+              SizedBox(height: 8.0),
+               TextButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(
+                              builder: (build) => RegisterPage()));
+              },
+              child: Text('Create an account'),
+            ),
             ],
           ),
         ),
-        resizeToAvoidBottomInset: false,
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              child: Stack(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.fromLTRB(15.0, 110.0, 0.0, 0.0),
-                    child: const Text('Hello there',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 50.0,
-                            fontWeight: FontWeight.bold)),
-                  ),
-                  Container(
-                    padding: EdgeInsets.fromLTRB(16.0, 175.0, 17.0, 16.0),
-                    child: Text('Wellcome Spotify',
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 30.0,
-                            fontWeight: FontWeight.bold)),
-                  ),
-                ],
+      ),
+    );
+  }
+}
+
+class RegisterPage extends StatelessWidget {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  void register(BuildContext context) async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      // Xử lý đăng ký thành công
+      User? user = userCredential.user;
+      if (user != null) {
+         Navigator.push(context, MaterialPageRoute(
+                              builder: (build) => LoginPage()));
+      }
+    } catch (e) {
+      // Xử lý đăng ký thất bại
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Registration failed. Please try again.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Register'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Create an account',
+              style: TextStyle(
+                fontSize: 24.0,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            Container(
-                padding: EdgeInsets.only(top: 35.0, left: 20.0, right: 20.0),
-                child: Column(
-                  children: <Widget>[
-                    TextField(
-                      decoration: const InputDecoration(
-                          labelText: 'EMAIL',
-                          labelStyle: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
-                          focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.green))),
-                    ),
-                    SizedBox(height: 20.0),
-                    TextField(
-                      decoration: const InputDecoration(
-                          labelText: 'PASSWORD',
-                          labelStyle: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
-                          focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.green))),
-                      obscureText: true,
-                    ),
-                    SizedBox(height: 5.0),
-                    Container(
-                      alignment: Alignment(1.0, 0.0),
-                      padding: EdgeInsets.only(top: 15.0, left: 20.0),
-                      child: InkWell(
-                        child: Text(
-                          'Forgot Password',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Montserrat',
-                              decoration: TextDecoration.underline),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 40.0),
-                    Container(
-                      height: 40.0,
-                      child: Material(
-                        borderRadius: BorderRadius.circular(20.0),
-                        shadowColor: Color.fromARGB(255, 30, 142, 88),
-                        color: Colors.green,
-                        elevation: 7.0,
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (build) => const Spotify()));
-                          },
-                          child: const Center(
-                            child: Text(
-                              'LOGIN',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Montserrat'),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 20.0),
-                    Container(
-                      height: 40.0,
-                      color: Colors.transparent,
-                      child: Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Colors.black,
-                                style: BorderStyle.solid,
-                                width: 1.0),
-                            color: Colors.transparent,
-                            borderRadius: BorderRadius.circular(20.0)),
-                      ),
-                    )
-                  ],
-                )),
-            SizedBox(height: 15.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const Text(
-                  'New to Spotify ?',
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    color: Colors.green,
-                  ),
-                ),
-                SizedBox(width: 5.0),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (build) => SignupPage()));
-                  },
-                  child: const Text(
-                    'Register',
-                    style: TextStyle(
-                        color: Colors.green,
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.bold,
-                        decoration: TextDecoration.underline),
-                  ),
-                )
-              ],
-            )
+            SizedBox(height: 16.0),
+            TextField(
+              controller: emailController,
+              decoration: InputDecoration(
+                labelText: 'Email',
+              ),
+            ),
+            SizedBox(height: 16.0),
+            TextField(
+              controller: passwordController,
+              obscureText: true,
+              decoration: InputDecoration(
+                labelText: 'Password',
+              ),
+            ),
+            SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: () => register(context),
+              child: Text('Register'),
+            ),
           ],
-        ));
+        ),
+      ),
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  final User? user = FirebaseAuth.instance.currentUser;
+
+  void logout(BuildContext context) async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushReplacementNamed(context, '/login');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Home'),
+        actions: [
+          IconButton(
+            onPressed: () => logout(context),
+            icon: Icon(Icons.logout),
+          ),
+        ],
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Welcome to Spotify!',
+              style: TextStyle(
+                fontSize: 24.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 16.0),
+            if (user != null)
+             Text(
+  'Logged in as ${user!.email}',
+  style: TextStyle(fontSize: 16.0),
+),
+
+          ],
+        ),
+      ),
+    );
   }
 }

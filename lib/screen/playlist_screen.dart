@@ -19,33 +19,39 @@ class _PlayListScreenState extends State<PlayListScreen> {
   Widget build(BuildContext context) {
     // fetchPost();
     return Scaffold(
+      appBar: AppBar(
+        actions: <Widget>[
+        IconButton(
+          icon: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            // do something
+          },
+        )
+  ],
+         centerTitle: true,
+          title: Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      // const SizedBox(
+      //   width: 30,
+      // ),
+      Image.asset(
+        'assets/images/logo.png',
+        scale: 10,
+      ),
+    ],
+  ),
+            backgroundColor: Colors.black,
+      ),
       body: Stack(
         children: [
           Container(
             color: Colors.pink,
           ),
-          Positioned(
-          left: 15.0,
-          top: 40.0,
-          child: ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Spotify()),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-                shape: const CircleBorder(),
-                primary: Colors.black,
-                padding: const EdgeInsets.all(8.0)),
-                
-            child: const Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-              size: 20.0,
-            ),
-          ),
-        ),
+         
           SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             child: Column(
@@ -67,10 +73,10 @@ class _PlayListScreenState extends State<PlayListScreen> {
                   ),
                   child: Column(
                     children: [
-                      SizedBox(height: 40,),
+                       const SizedBox(height: 40,),
                       Image(
     
-                      image: AssetImage("assets/images/taylor.jpg"),
+                      image: const  AssetImage("assets/images/tokyo.jpg"),
                       width: MediaQuery.of(context).size.width - 140,
                       height: MediaQuery.of(context).size.width - 120,
                       fit: BoxFit.cover,
@@ -79,12 +85,13 @@ class _PlayListScreenState extends State<PlayListScreen> {
                         padding:  EdgeInsets.all(16.0),
                         child: Column(
                           children: [
-                            Text("Album",
+                             const Text("The Tokyo Connection",
+                          
                             style: TextStyle(color: Colors.white, fontSize: 30,fontWeight: FontWeight.bold),
                             
                             ),
                             Row(
-                              children: [
+                              children: const  [
                                 Image(
                                   image: AssetImage("assets/images/logo.png"),
                                   height: 72,
@@ -99,6 +106,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
                     ],
                   ),
                 ),
+                
                 Container(
                   color: Colors.black,
                   height: 600,
@@ -108,13 +116,14 @@ class _PlayListScreenState extends State<PlayListScreen> {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
                       child: CircularProgressIndicator(),
+                      
                     );
                   } else {
                     if (snapshot.hasData) {
                       var totalData = snapshot.data.length;
                       print("Total Data" + totalData.toString());
                       return ListView.separated(
-                        padding: const EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(6),
                         itemBuilder: (context, idx) {
                           return displayList(Song.fromJson(snapshot.data[idx]),
                               idx, snapshot.data);
@@ -140,10 +149,19 @@ class _PlayListScreenState extends State<PlayListScreen> {
       bottomNavigationBar: Row(
         children: [
           Container(
-            child: Icon(Icons.home_outlined, color: Color.fromARGB(255, 10, 127, 14),size: 40,),
+            child:  IconButton(
+              
+              onPressed: () => {
+                print("Home"),
+                Navigator.push(context, MaterialPageRoute(
+                              builder: (build) => const Spotify()))
+                
+            }
+            ,icon: Icon(Icons.home_outlined,color: Color.fromARGB(255, 10, 127, 14,),size: 40)
+            ),
             width: MediaQuery.of(context).size.width / 4,
             height: 80,
-            decoration: BoxDecoration(
+            decoration: const  BoxDecoration(
               color: Color.fromARGB(255, 58, 57, 57)
             ),
           ),
@@ -160,7 +178,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
             ),
             width: MediaQuery.of(context).size.width / 4,
             height: 80,
-            decoration: BoxDecoration(
+            decoration: const  BoxDecoration(
               color: Color.fromARGB(255, 58, 57, 57)
             ),
           ),
@@ -168,15 +186,15 @@ class _PlayListScreenState extends State<PlayListScreen> {
             child: Icon(Icons.access_time, color: Color.fromARGB(255, 10, 127, 14),size: 40,),
             width: MediaQuery.of(context).size.width / 4,
             height: 80,
-            decoration: BoxDecoration(
+            decoration: const  BoxDecoration(
               color: Color.fromARGB(255, 58, 57, 57)
             ),
           ),
            Container(
-            child: Icon(Icons.person_2_outlined, color: Color.fromARGB(255, 10, 127, 14),size: 40,),
+            child: const  Icon(Icons.person_2_outlined, color: Color.fromARGB(255, 10, 127, 14),size: 40,),
             width: MediaQuery.of(context).size.width / 4,
             height: 80,
-            decoration: BoxDecoration(
+            decoration: const  BoxDecoration(
               color: Color.fromARGB(255, 58, 57, 57)
             ),
           ),
@@ -186,27 +204,33 @@ class _PlayListScreenState extends State<PlayListScreen> {
   }
 
   Widget displayList(Song song, int idx, List<Map<String, Object?>> snapshot) {
-    return ListTile(
-      // shape: RoundedRectangleBorder(
-      //           side: const BorderSide(color: Colors.white, width: 4),
-      //           borderRadius: BorderRadius.circular(15),
-      //         ),
-      leading: CircleAvatar(
-        child: Text(idx.toString()),
-      ),
-      title: Text(song.title, style: TextStyle(color: Colors.white),),
-      subtitle: Text(song.artist, style: TextStyle(color: Colors.white),),
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => PlayerScreen(
-                    song: snapshot,
-                    index: idx,
-                  )),
-        );
-      },
+    return Card(
       
+        shape: RoundedRectangleBorder(
+              side: BorderSide(color: Color.fromARGB(255, 33, 33, 33),width: 2),
+              borderRadius: BorderRadius.circular(20)
+           ),
+      child: ListTile(
+        tileColor: Colors.black,
+        
+        leading: CircleAvatar(
+         
+          child: Text(idx.toString()),
+        ),
+        title: Text(song.title, style: const TextStyle(color: Colors.white),),
+        subtitle: Text(song.artist, style: const  TextStyle(color: Colors.white),),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => PlayerScreen(
+                      song: snapshot,
+                      index: idx,
+                    )),
+          );
+        },
+        
+      ),
     );
   }
 }

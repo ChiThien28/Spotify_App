@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import 'home_spotify.dart';
 
 class SignupPage extends StatefulWidget {
   @override
@@ -6,6 +9,8 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
+  TextEditingController _passwordTextController = TextEditingController();
+  TextEditingController _emailTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -85,7 +90,15 @@ class _SignupPageState extends State<SignupPage> {
                             color: Colors.green,
                             elevation: 7.0,
                             child: GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                  // FirebaseAuth.instance.createUserWithEmailAndPassword(email: _emailTextController, password: );
+
+                                Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (build) => const Spotify()));
+                              }
+                              ,
                               child: Center(
                                 child: Text(
                                   'SIGNUP',

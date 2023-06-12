@@ -56,7 +56,7 @@ class _PlayListScreenState extends State<PlayListLibraryScreen> {
                             Navigator.push(context, MaterialPageRoute(
                               builder: (build) => PlayListScreen()));
                           },
-                child: Image.asset('assets/images/billie.jpg', scale: 2,),
+                child: Image.asset('assets/images/tokyoo.jpg', scale: 2,),
                 
               ),
             
