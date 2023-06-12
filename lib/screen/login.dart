@@ -16,7 +16,6 @@ class MyApp extends StatelessWidget {
       ),
       home: LoginPage(),
       routes: {
-        '/home': (context) => HomePage(),
         '/register': (context) => RegisterPage(),
       },
     );
@@ -230,51 +229,6 @@ class RegisterPage extends StatelessWidget {
               onPressed: () => register(context),
               child: Text('Register'),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  final User? user = FirebaseAuth.instance.currentUser;
-
-  void logout(BuildContext context) async {
-    await FirebaseAuth.instance.signOut();
-    Navigator.pushReplacementNamed(context, '/login');
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Home'),
-        actions: [
-          IconButton(
-            onPressed: () => logout(context),
-            icon: Icon(Icons.logout),
-          ),
-        ],
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Welcome to Spotify!',
-              style: TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 16.0),
-            if (user != null)
-             Text(
-  'Logged in as ${user!.email}',
-  style: TextStyle(fontSize: 16.0),
-),
-
           ],
         ),
       ),
