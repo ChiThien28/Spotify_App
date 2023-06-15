@@ -81,8 +81,8 @@ class LoginPage extends StatelessWidget {
               SizedBox(height: 8.0),
               Image.asset(
                 'assets/images/logo.png',
-                height: 80.0,
-                width: 80.0,
+                height: 120.0,
+                width: 120.0,
               ),
               SizedBox(height: 32.0),
               Text(
@@ -194,42 +194,71 @@ class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Register'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
+      body: Center(
+        
+        child: Container(
+            color: Colors.black,
+          padding: EdgeInsets.all(16.0),
+          child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Image.asset(
+                'assets/images/logo.png',
+                height: 160.0,
+                width: 160.0,
+              ),
+             SizedBox(height: 10.0),
             Text(
               'Create an account',
               style: TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
-              ),
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
             ),
             SizedBox(height: 16.0),
-            TextField(
-              controller: emailController,
-              decoration: InputDecoration(
-                labelText: 'Email',
+            Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: TextField(
+                  controller: emailController,
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    prefixIcon: Icon(Icons.email, color: Colors.white),
+                    labelStyle: TextStyle(color: Colors.white),
+                    border: InputBorder.none,
+                  ),
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
-            ),
-            SizedBox(height: 16.0),
-            TextField(
-              controller: passwordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Password',
+              SizedBox(height: 8.0),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: TextField(
+                  controller: passwordController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    prefixIcon: Icon(Icons.lock, color: Colors.white),
+                    labelStyle: TextStyle(color: Colors.white),
+                    border: InputBorder.none,
+                  ),
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
-            ),
             SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () => register(context),
               child: Text('Register'),
             ),
+            
           ],
+          ),
         ),
       ),
     );

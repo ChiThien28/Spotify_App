@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spotify/screen/login.dart';
 import 'package:spotify/screen/playlistLibrary_screen.dart';
 class Spotify extends StatefulWidget {
   const Spotify({super.key});
@@ -16,11 +17,14 @@ class _SpotifyState extends State<Spotify> {
         actions: <Widget>[
         IconButton(
           icon: Icon(
-            Icons.add,
+            Icons.logout_outlined,
             color: Colors.white,
           ),
           onPressed: () {
-            // do something
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => LoginPage()),
+              );
           },
         )
   ],
