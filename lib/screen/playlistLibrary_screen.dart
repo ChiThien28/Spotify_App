@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:spotify/screen/album.dart';
+import 'package:spotify/screen/home_spotify.dart';
 import 'package:spotify/screen/playlist_screen.dart';
 
-import 'home_spotify.dart';
+import '../db/mongoDB.dart';
+import '../model/song.dart';
+
 class PlayListLibraryScreen extends StatefulWidget {
   const PlayListLibraryScreen({super.key});
 
@@ -11,127 +13,145 @@ class PlayListLibraryScreen extends StatefulWidget {
 }
 
 class _PlayListScreenState extends State<PlayListLibraryScreen> {
+  void navigateToPlayListScreen(BuildContext context, List<Song> albumSongs) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PlayListScreen(
+          album: albumSongs,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
         actions: <Widget>[
-        IconButton(
-          icon: Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            // do something
-          },
-        )
-  ],
-         centerTitle: true,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              
-              // const SizedBox(
-              //   width: 45,
-              // ),
-              const Text(
-                'PlayList',
-                style: TextStyle(color: Colors.white),
-              ),
-            ],
+          IconButton(
+            icon: const Icon(
+              Icons.add,
+              color: Colors.white,
             ),
-            backgroundColor: Colors.black,
+            onPressed: () {
+              // do something
+            },
+          )
+        ],
+        centerTitle: true,
+        title:  Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // const SizedBox(
+            //   width: 45,
+            // ),
+            Text(
+              'AlbumList',
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
+        backgroundColor: Colors.black,
       ),
       body: Scrollbar(
-        thickness: 5  , radius: const Radius.circular(5),
+        thickness: 5,
+        radius: const Radius.circular(5),
         child: GridView.count(
-          mainAxisSpacing: 10, crossAxisSpacing: 10,
+          mainAxisSpacing: 30,
+          crossAxisSpacing: 15,
           crossAxisCount: 2,
           children: [
-            
             Container(
               child: GestureDetector(
-                onTap: () {
-                            Navigator.push(context, MaterialPageRoute(
-                              builder: (build) => PlayListScreen()));
-                          },
-                child: Image.asset('assets/images/tokyoo.jpg', scale: 2,),
-                
-              ),
-            
-            ),
-             ClipRRect(
-                child: GestureDetector(
-                onTap: () {
-                            Navigator.push(context, MaterialPageRoute(
-                              builder: (build) => PlayListScreen()));
-                          },
-               child: Image.asset('assets/images/taylor.jpg', scale: 2,),
-                
-              ),
-                
-            ),
-             Container(
-                child: GestureDetector(
-                onTap: () {
-                            Navigator.push(context, MaterialPageRoute(
-                              builder: (build) => PlayListScreen()));
-                          },
-               child: Image.asset('assets/images/ed.jpg', scale: 2,),
-                
-              ),
-            ),
-             Container(
-                child: GestureDetector(
-                onTap: () {
-                            Navigator.push(context, MaterialPageRoute(
-                              builder: (build) => PlayListScreen()));
-                          },
-               child: Image.asset('assets/images/theweeknd.jpg', scale: 2,),
-                
+                onTap: () async {
+                  const albumName =
+                      'Wake Up'; // Replace with the actual album name
+                  final albumSongs =
+                      await MongoDatabase.getDataByAlbum(albumName);
+                  navigateToPlayListScreen(context, albumSongs);
+                },
+                child: Image.network(
+                  "https://storage.googleapis.com/uamp/The_Kyoto_Connection_-_Wake_Up/art.jpg",
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             Container(
-                child: GestureDetector(
-                onTap: () {
-                            Navigator.push(context, MaterialPageRoute(
-                              builder: (build) => PlayListScreen()));
-                          },
-               child : Image.asset('assets/images/eminem.jpg', scale: 2,),
-                
+              child: GestureDetector(
+                onTap: () async {
+                  const albumName =
+                      'Jazz & Blues'; // Replace with the actual album name
+                  final albumSongs =
+                      await MongoDatabase.getDataByAlbum(albumName);
+                  navigateToPlayListScreen(context, albumSongs);
+                },
+                child: Image.network(
+                  "https://storage.googleapis.com/automotive-media/album_art.jpg",
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             Container(
-                child: GestureDetector(
-                onTap: () {
-                            Navigator.push(context, MaterialPageRoute(
-                              builder: (build) => PlayListScreen()));
-                          },
-               child: Image.asset('assets/images/mtp.jpg', scale: 2,),
-                
-              )
+              child: GestureDetector(
+                onTap: () async {
+                  const albumName =
+                      'Cinematic'; // Replace with the actual album name
+                  final albumSongs =
+                      await MongoDatabase.getDataByAlbum(albumName);
+                  navigateToPlayListScreen(context, albumSongs);
+                },
+                child: Image.network(
+                  "https://storage.googleapis.com/automotive-media/album_art.jpg",
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
             Container(
-               child: GestureDetector(
-                onTap: () {
-                            Navigator.push(context, MaterialPageRoute(
-                              builder: (build) => PlayListScreen()));
-                          },
-               child: Image.asset('assets/images/nicki.jpg', scale: 2,),
-              
-                
-              ) 
+              child: GestureDetector(
+                onTap: () async {
+                  const albumName =
+                      "Youtube Audio Library Rock"; // Replace with the actual album name
+                  final albumSongs =
+                      await MongoDatabase.getDataByAlbum(albumName);
+                  navigateToPlayListScreen(context, albumSongs);
+                },
+                child: Image.network(
+                  "https://storage.googleapis.com/automotive-media/album_art_2.jpg",
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
             Container(
-                child: GestureDetector(
-                onTap: () {
-                            Navigator.push(context, MaterialPageRoute(
-                              builder: (build) => PlayListScreen()));
-                          },
-               child: Image.asset('assets/images/theweeknd.jpg', scale: 2,),
-                
-              )
+              child: GestureDetector(
+                onTap: () async {
+                  const albumName =
+                      "Youtube Audio Library Rock 2"; // Replace with the actual album name
+                  final albumSongs =
+                      await MongoDatabase.getDataByAlbum(albumName);
+                  navigateToPlayListScreen(context, albumSongs);
+                },
+                child: Image.network(
+                  "https://storage.googleapis.com/automotive-media/album_art_3.jpg",
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            Container(
+              child: GestureDetector(
+                onTap: () async {
+                  const albumName =
+                      "Spatial Audio"; // Replace with the actual album name
+                  final albumSongs =
+                      await MongoDatabase.getDataByAlbum(albumName);
+                  navigateToPlayListScreen(context, albumSongs);
+                },
+                child: Image.network(
+                  "https://storage.googleapis.com/uamp/Spatial Audio/Marching band.jpg",
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
           ],
         ),
@@ -190,7 +210,6 @@ class _PlayListScreenState extends State<PlayListLibraryScreen> {
           ),
         ],
       ),
-      
     );
   }
 }
