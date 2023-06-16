@@ -47,7 +47,7 @@ class _PlayListScreenState extends State<PlayListLibraryScreen> {
             //   width: 45,
             // ),
             Text(
-              'PlayList',
+              'AlbumList',
               style: TextStyle(color: Colors.white),
             ),
           ],
@@ -58,8 +58,8 @@ class _PlayListScreenState extends State<PlayListLibraryScreen> {
         thickness: 5,
         radius: const Radius.circular(5),
         child: GridView.count(
-          mainAxisSpacing: 10,
-          crossAxisSpacing: 10,
+          mainAxisSpacing: 30,
+          crossAxisSpacing: 15,
           crossAxisCount: 2,
           children: [
             Container(
@@ -73,7 +73,7 @@ class _PlayListScreenState extends State<PlayListLibraryScreen> {
                 },
                 child: Image.network(
                   "https://storage.googleapis.com/uamp/The_Kyoto_Connection_-_Wake_Up/art.jpg",
-                  scale: 2,
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
@@ -88,7 +88,7 @@ class _PlayListScreenState extends State<PlayListLibraryScreen> {
                 },
                 child: Image.network(
                   "https://storage.googleapis.com/automotive-media/album_art.jpg",
-                  scale: 2,
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
@@ -103,7 +103,7 @@ class _PlayListScreenState extends State<PlayListLibraryScreen> {
                 },
                 child: Image.network(
                   "https://storage.googleapis.com/automotive-media/album_art.jpg",
-                  scale: 2,
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
@@ -118,7 +118,7 @@ class _PlayListScreenState extends State<PlayListLibraryScreen> {
                 },
                 child: Image.network(
                   "https://storage.googleapis.com/automotive-media/album_art_2.jpg",
-                  scale: 2,
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
@@ -133,7 +133,7 @@ class _PlayListScreenState extends State<PlayListLibraryScreen> {
                 },
                 child: Image.network(
                   "https://storage.googleapis.com/automotive-media/album_art_3.jpg",
-                  scale: 2,
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
@@ -148,7 +148,7 @@ class _PlayListScreenState extends State<PlayListLibraryScreen> {
                 },
                 child: Image.network(
                   "https://storage.googleapis.com/uamp/Spatial Audio/Marching band.jpg",
-                  scale: 2,
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
