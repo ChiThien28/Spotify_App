@@ -21,4 +21,10 @@ class MongoDatabase {
     final songList = arrData.map<Song>((data) => Song.fromJson(data)).toList();
     return songList;
   }
+
+  static Future<List<Song>> getDataByAlbum(albumName) async {
+    final arrData = await songCollection.find({'album': albumName}).toList();
+    final songList = arrData.map<Song>((data) => Song.fromJson(data)).toList();
+    return songList;
+  }
 }

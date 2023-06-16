@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:spotify/screen/playlist_screen.dart';
 
+import '../db/mongoDB.dart';
+import '../model/song.dart';
+
 class PlayListLibraryScreen extends StatefulWidget {
   const PlayListLibraryScreen({super.key});
 
@@ -9,6 +12,17 @@ class PlayListLibraryScreen extends StatefulWidget {
 }
 
 class _PlayListScreenState extends State<PlayListLibraryScreen> {
+  void navigateToPlayListScreen(BuildContext context, List<Song> albumSongs) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PlayListScreen(
+          album: albumSongs,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,59 +64,92 @@ class _PlayListScreenState extends State<PlayListLibraryScreen> {
           children: [
             Container(
               child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (build) => const PlayListScreen()));
+                onTap: () async {
+                  const albumName =
+                      'Wake Up'; // Replace with the actual album name
+                  final albumSongs =
+                      await MongoDatabase.getDataByAlbum(albumName);
+                  navigateToPlayListScreen(context, albumSongs);
                 },
-                child: Image.asset(
-                  'assets/images/billie.jpg',
+                child: Image.network(
+                  "https://storage.googleapis.com/uamp/The_Kyoto_Connection_-_Wake_Up/art.jpg",
                   scale: 2,
                 ),
               ),
             ),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(20.0),
-              child: Image.asset(
-                'assets/images/taylor.jpg',
-                scale: 2,
+            Container(
+              child: GestureDetector(
+                onTap: () async {
+                  const albumName =
+                      'Jazz & Blues'; // Replace with the actual album name
+                  final albumSongs =
+                      await MongoDatabase.getDataByAlbum(albumName);
+                  navigateToPlayListScreen(context, albumSongs);
+                },
+                child: Image.network(
+                  "https://storage.googleapis.com/automotive-media/album_art.jpg",
+                  scale: 2,
+                ),
               ),
             ),
             Container(
-              child: Image.asset(
-                'assets/images/ed.jpg',
-                scale: 2,
+              child: GestureDetector(
+                onTap: () async {
+                  const albumName =
+                      'Cinematic'; // Replace with the actual album name
+                  final albumSongs =
+                      await MongoDatabase.getDataByAlbum(albumName);
+                  navigateToPlayListScreen(context, albumSongs);
+                },
+                child: Image.network(
+                  "https://storage.googleapis.com/automotive-media/album_art.jpg",
+                  scale: 2,
+                ),
               ),
             ),
             Container(
-              child: Image.asset(
-                'assets/images/theweeknd.jpg',
-                scale: 2,
+              child: GestureDetector(
+                onTap: () async {
+                  const albumName =
+                      "Youtube Audio Library Rock"; // Replace with the actual album name
+                  final albumSongs =
+                      await MongoDatabase.getDataByAlbum(albumName);
+                  navigateToPlayListScreen(context, albumSongs);
+                },
+                child: Image.network(
+                  "https://storage.googleapis.com/automotive-media/album_art_2.jpg",
+                  scale: 2,
+                ),
               ),
             ),
             Container(
-              child: Image.asset(
-                'assets/images/eminem.jpg',
-                scale: 2,
+              child: GestureDetector(
+                onTap: () async {
+                  const albumName =
+                      "Youtube Audio Library Rock 2"; // Replace with the actual album name
+                  final albumSongs =
+                      await MongoDatabase.getDataByAlbum(albumName);
+                  navigateToPlayListScreen(context, albumSongs);
+                },
+                child: Image.network(
+                  "https://storage.googleapis.com/automotive-media/album_art_3.jpg",
+                  scale: 2,
+                ),
               ),
             ),
             Container(
-              child: Image.asset(
-                'assets/images/mtp.jpg',
-                scale: 2,
-              ),
-            ),
-            Container(
-              child: Image.asset(
-                'assets/images/nicki.jpg',
-                scale: 2,
-              ),
-            ),
-            Container(
-              child: Image.asset(
-                'assets/images/theweeknd.jpg',
-                scale: 2,
+              child: GestureDetector(
+                onTap: () async {
+                  const albumName =
+                      "Spatial Audio"; // Replace with the actual album name
+                  final albumSongs =
+                      await MongoDatabase.getDataByAlbum(albumName);
+                  navigateToPlayListScreen(context, albumSongs);
+                },
+                child: Image.network(
+                  "https://storage.googleapis.com/uamp/Spatial Audio/Marching band.jpg",
+                  scale: 2,
+                ),
               ),
             ),
           ],

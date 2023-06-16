@@ -152,7 +152,10 @@ class _PlayerScreenState extends State<PlayerScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const PlayListScreen()),
+                MaterialPageRoute(
+                    builder: (context) => PlayListScreen(
+                          album: widget.song,
+                        )),
               );
             },
             style: ElevatedButton.styleFrom(
@@ -169,7 +172,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 40),
+            const SizedBox(height: 50),
             const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -202,28 +205,36 @@ class _PlayerScreenState extends State<PlayerScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              songItem.title,
-                              style: const TextStyle(
-                                  fontSize: 13,
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                songItem.title,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: const TextStyle(
+                                  fontSize: 20,
                                   fontWeight: FontWeight.w700,
-                                  color: Colors.white),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              songItem.artist,
-                              style: const TextStyle(
-                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                songItem.artist,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: const TextStyle(
+                                  fontSize: 15,
                                   fontWeight: FontWeight.w600,
-                                  color: Colors.white),
-                            )
-                          ],
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -241,7 +252,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
                           min: 0,
                           max: duration.inSeconds.toDouble(),
                           value: posiotion.inSeconds
-                              .toDouble(), // Sử dụng position thay vì value
+                              .toDouble()
+                              .clamp(0, duration.inSeconds.toDouble()),
+                          // Sử dụng position thay vì value
                           onChanged: (value) async {
                             final position = Duration(
                                 seconds: value

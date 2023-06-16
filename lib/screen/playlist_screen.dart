@@ -5,24 +5,26 @@ import '../db/mongoDB.dart';
 import '../model/song.dart';
 
 class PlayListScreen extends StatefulWidget {
-  const PlayListScreen({super.key});
+  final List<Song> album;
+  PlayListScreen({super.key, required this.album});
 
   @override
   State<PlayListScreen> createState() => _PlayListScreenState();
 }
 
 class _PlayListScreenState extends State<PlayListScreen> {
-  late Future<List<Song>> albumList;
+  late List<Song> songs;
 
   @override
   void initState() {
     super.initState();
-    _initializeData();
+    songs = widget.album;
+    // _initializeData();
   }
 
-  Future<void> _initializeData() async {
-    albumList = MongoDatabase.getData();
-  }
+  // Future<void> _initializeData() async {
+  //   albumList = MongoDatabase.getData();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -30,34 +32,14 @@ class _PlayListScreenState extends State<PlayListScreen> {
         appBar: AppBar(
           title: const Text("Demo Text Api Flutter"),
         ),
-        body: FutureBuilder(
-            future: albumList,
-            builder: (context, AsyncSnapshot snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else {
-                if (snapshot.hasData) {
-                  var totalData = snapshot.data.length;
-                  // ignore: avoid_print
-                  print("Total Data: $totalData");
-                  return ListView.separated(
-                    padding: const EdgeInsets.all(8),
-                    itemBuilder: (context, idx) {
-                      return displayList(
-                          snapshot.data[idx], idx, snapshot.data);
-                    },
-                    separatorBuilder: (context, idx) => const Divider(),
-                    itemCount: snapshot.data.length,
-                  );
-                } else {
-                  return const Center(
-                    child: Text("No data Available."),
-                  );
-                }
-              }
-            }));
+        body: ListView.separated(
+          padding: const EdgeInsets.all(8),
+          itemBuilder: (context, idx) {
+            return displayList(songs[idx], idx, songs);
+          },
+          separatorBuilder: (context, idx) => const Divider(),
+          itemCount: songs.length,
+        ));
   }
 
   Widget displayList(Song song, int idx, List<Song> snapshot) {
